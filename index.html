@@ -916,7 +916,7 @@
     // ========== SUPABASE INITIALIZATION ==========
     // Replace with your actual Supabase URL and anon key
     const SUPABASE_URL = 'https://cstzpeannerdvwyxpfph.supabase.co';
-    const SUPABASE_ANON_KEY =  'sb_publishable_SEiYbtYlFn8YShWyPa_vSQ_ZF_-yiym';
+    const SUPABASE_ANON_KEY = 'sb_publishable_SEiYbtYlFn8YShWyPa_vSQ_ZF_-yiym';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // Global state
@@ -988,57 +988,91 @@
     });
 
     // ========== AUTHENTICATION ==========
-    async function login() {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const role = document.getElementById('role-select').value;
+    // ========== DEBUG LOGIN FUNCTION ==========
+async function login() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const role = document.getElementById('role-select').value;
 
-      if (!email || !password || !role) {
-        showToast('All fields are required', 'error');
-        return;
-      }
+  // Show what we're trying
+  alert('Step 1: Login attempted with email: ' + email + ', role: ' + role);
 
-      showLoader('Authenticating...');
-      try {
-        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-        if (authError) throw authError;
+  if (!email || !password || !role) {
+    alert('❌ Please fill all fields');
+    return;
+  }
 
-        // Fetch profile
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authData.user.id)
-          .single();
-        if (profileError) throw profileError;
-
-        if (profile.role !== role) {
-          throw new Error('Role mismatch. Please select the correct role.');
-        }
-
-        currentUser = profile;
-        localStorage.setItem('alburuj_user', JSON.stringify(profile));
-
-        // Update last login
-        await supabase.from('profiles').update({ last_login: new Date().toISOString() }).eq('id', profile.id);
-
-        document.getElementById('login-page').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        document.getElementById('username-display').textContent = profile.full_name;
-        document.getElementById('user-role-display').textContent = profile.role;
-        updateDateDisplay();
-        applyRoleVisibility(profile.role);
-
-        // Load default module
-        showModule('dashboard-module');
-      } catch (error) {
-        showToast(error.message, 'error');
-      } finally {
-        hideLoader();
-      }
+  alert('Step 2: Connecting to Supabase...');
+  showLoader('Authenticating...');
+  
+  try {
+    // Test if Supabase is connected
+    alert('Step 3: Supabase URL: ' + SUPABASE_URL);
+    
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+    
+    if (authError) {
+      alert('❌ Auth Error: ' + authError.message);
+      console.error('Auth error:', authError);
+      showToast(authError.message, 'error');
+      hideLoader();
+      return;
     }
+    
+    alert('Step 4: ✅ Auth successful! User ID: ' + authData.user.id);
+    
+    // Fetch profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', authData.user.id)
+      .single();
+    
+    if (profileError) {
+      alert('❌ Profile Error: ' + profileError.message);
+      console.error('Profile error:', profileError);
+      showToast('Profile not found: ' + profileError.message, 'error');
+      hideLoader();
+      return;
+    }
+    
+    alert('Step 5: ✅ Profile found! Name: ' + profile.full_name + ', Role: ' + profile.role);
+    
+    if (profile.role !== role) {
+      alert('❌ Role mismatch. Selected: ' + role + ', Database: ' + profile.role);
+      showToast('Role mismatch. Please select the correct role.', 'error');
+      hideLoader();
+      return;
+    }
+    
+    alert('Step 6: ✅ Login successful! Redirecting...');
+    
+    currentUser = profile;
+    localStorage.setItem('alburuj_user', JSON.stringify(profile));
+
+    // Update last login
+    await supabase.from('profiles').update({ last_login: new Date().toISOString() }).eq('id', profile.id);
+
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('username-display').textContent = profile.full_name;
+    document.getElementById('user-role-display').contentText = profile.role;
+    updateDateDisplay();
+    applyRoleVisibility(profile.role);
+
+    showModule('dashboard-module');
+    hideLoader();
+    
+  } catch (error) {
+    alert('❌ Exception: ' + error.message);
+    console.error('Exception:', error);
+    showToast(error.message, 'error');
+    hideLoader();
+  }
+}
 
     async function logout() {
       await supabase.auth.signOut();
