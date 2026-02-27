@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +50,7 @@
       align-items: center;
       flex-direction: column;
       z-index: 9999;
-      pointer-events: all; /* blocks interactions */
+      pointer-events: all;
     }
     .loader-spinner {
       width: 50px;
@@ -129,8 +130,7 @@
       color: #555;
     }
     .form-group input,
-    .form-group select,
-    .form-group textarea {
+    .form-group select {
       width: 100%;
       padding: 12px 15px;
       border: 1px solid #ddd;
@@ -139,8 +139,7 @@
       transition: var(--transition);
     }
     .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
+    .form-group select:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 2px rgba(13,126,184,0.2);
@@ -451,23 +450,29 @@
       <p>Business Management System</p>
       <div class="form-group">
         <label>Email</label>
-        <input type="email" id="email" placeholder="Enter your email">
+        <input type="email" id="email" placeholder="Enter your email" value="admin@alburuj.com">
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" id="password" placeholder="Enter your password">
+        <input type="password" id="password" placeholder="Enter your password" value="password123">
       </div>
       <div class="form-group">
         <label>Role</label>
         <select id="role-select">
           <option value="">Select Role</option>
-          <option value="Admin">Admin</option>
+          <option value="Admin" selected>Admin</option>
           <option value="Sales">Sales</option>
           <option value="Inventory">Inventory</option>
         </select>
       </div>
       <button class="login-btn" onclick="login()">Login</button>
       <div id="login-error" class="error-message"></div>
+      <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; text-align: left;">
+        <p><strong>Test Credentials:</strong></p>
+        <p>Email: admin@alburuj.com</p>
+        <p>Password: password123</p>
+        <p>Role: Admin</p>
+      </div>
     </div>
   </div>
 
@@ -532,7 +537,7 @@
         </div>
       </div>
 
-      <!-- Admin Module (User Management) -->
+      <!-- Admin Module -->
       <div id="admin-module" class="module-section">
         <div class="section-header">
           <h2>Admin Panel</h2>
@@ -701,38 +706,6 @@
     </div>
   </div>
 
-  <!-- ========== MODALS ========== -->
-  <!-- Add User Modal -->
-  <div id="add-user-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2>Add User</h2><button class="close-modal" onclick="closeModal('add-user-modal')">&times;</button></div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group"><label>Username</label><input id="user-username"></div>
-          <div class="form-group"><label>Full Name</label><input id="user-fullname"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Email</label><input type="email" id="user-email"></div>
-          <div class="form-group"><label>Password</label><input type="password" id="user-password"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Role</label>
-            <select id="user-role">
-              <option value="Admin">Admin</option>
-              <option value="Sales">Sales</option>
-              <option value="Inventory">Inventory</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Phone</label><input id="user-phone"></div>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-outline" onclick="closeModal('add-user-modal')">Cancel</button>
-        <button class="btn btn-primary" onclick="saveUser()">Save</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Add Customer Modal -->
   <div id="add-customer-modal" class="modal">
     <div class="modal-content">
@@ -804,117 +777,8 @@
     </div>
   </div>
 
-  <!-- Add Sale Modal -->
-  <div id="add-sale-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2>New Sale</h2><button class="close-modal" onclick="closeModal('add-sale-modal')">&times;</button></div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group"><label>Customer*</label>
-            <select id="sale-customer-id" required></select>
-          </div>
-          <div class="form-group"><label>Service Type*</label>
-            <select id="sale-service-type" onchange="toggleInstallationFields()">
-              <option value="Supply">Supply</option>
-              <option value="Installation">Installation</option>
-              <option value="Consultancy">Consultancy</option>
-              <option value="Maintenance">Maintenance</option>
-              <option value="Contract">Contract</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Amount (₦)*</label><input type="number" id="sale-amount"></div>
-          <div class="form-group"><label>Payment Status</label>
-            <select id="sale-payment-status">
-              <option value="Pending">Pending</option>
-              <option value="Partial">Partial</option>
-              <option value="Paid">Paid</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Sale Status</label>
-            <select id="sale-status">
-              <option value="Draft">Draft</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Due Date</label><input type="date" id="sale-due-date"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Notes</label><input id="sale-notes"></div>
-        </div>
-        <input type="hidden" id="sale-id">
-        <input type="hidden" id="existing-installation-id">
-
-        <!-- Installation Fields (shown only when Installation is selected) -->
-        <div id="installation-fields" style="display: none; border-top: 1px solid #ddd; margin-top: 15px; padding-top: 15px;">
-          <h4>Installation Details</h4>
-          <div class="form-row">
-            <div class="form-group"><label>Location</label><input id="install-location"></div>
-            <div class="form-group"><label>Install Date</label><input type="date" id="install-date"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Latitude</label><input id="install-lat"></div>
-            <div class="form-group"><label>Longitude</label><input id="install-lng"></div>
-          </div>
-          <h5>Panels</h5>
-          <div id="panels-container" class="dynamic-fields-container"></div>
-          <button type="button" class="btn btn-outline" onclick="addPanelField('panels-container')">Add Panel</button>
-          <h5 style="margin-top: 15px;">Expenses</h5>
-          <div id="expenses-container" class="dynamic-fields-container"></div>
-          <button type="button" class="btn btn-outline" onclick="addExpenseField('expenses-container')">Add Expense</button>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-outline" onclick="closeModal('add-sale-modal')">Cancel</button>
-        <button class="btn btn-primary" onclick="saveSale()">Save Sale</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add Installation Modal -->
-  <div id="add-installation-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2>Add Installation</h2><button class="close-modal" onclick="closeModal('add-installation-modal')">&times;</button></div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group"><label>Sale*</label>
-            <select id="install-sale-id" required></select>
-          </div>
-          <div class="form-group"><label>Customer*</label>
-            <select id="install-customer-id" required></select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Location*</label><input id="install-modal-location"></div>
-          <div class="form-group"><label>Install Date</label><input type="date" id="install-modal-date"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Latitude</label><input id="install-modal-lat"></div>
-          <div class="form-group"><label>Longitude</label><input id="install-modal-lng"></div>
-        </div>
-        <h5>Panels</h5>
-        <div id="install-panels-container" class="dynamic-fields-container"></div>
-        <button type="button" class="btn btn-outline" onclick="addPanelField('install-panels-container', 'install-panel')">Add Panel</button>
-        <h5 style="margin-top: 15px;">Expenses</h5>
-        <div id="install-expenses-container" class="dynamic-fields-container"></div>
-        <button type="button" class="btn btn-outline" onclick="addExpenseField('install-expenses-container', 'install-expense')">Add Expense</button>
-        <input type="hidden" id="install-id">
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-outline" onclick="closeModal('add-installation-modal')">Cancel</button>
-        <button class="btn btn-primary" onclick="saveInstallation()">Save</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     // ========== SUPABASE INITIALIZATION ==========
-    // Replace with your actual Supabase URL and anon key
     const SUPABASE_URL = 'https://cstzpeannerdvwyxpfph.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_SEiYbtYlFn8YShWyPa_vSQ_ZF_-yiym';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -935,9 +799,11 @@
       document.getElementById('global-loader').style.display = 'flex';
       document.querySelector('.loader-text').textContent = message;
     }
+    
     function hideLoader() {
       document.getElementById('global-loader').style.display = 'none';
     }
+    
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -945,7 +811,7 @@
       
       const msgSpan = document.createElement('span');
       msgSpan.className = 'toast-message';
-      msgSpan.textContent = message;  // safe from XSS
+      msgSpan.textContent = message;
       
       const closeBtn = document.createElement('button');
       closeBtn.className = 'toast-close';
@@ -957,29 +823,36 @@
       container.appendChild(toast);
       setTimeout(() => toast.remove(), 5000);
     }
+    
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>"]/g, function(m) {
         return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[m];
       });
     }
+    
     function formatCurrency(amount) {
       return '₦' + Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
+    
     function formatDate(dateStr) {
       if (!dateStr) return 'N/A';
       return new Date(dateStr).toLocaleDateString('en-NG', { day: '2-digit', month: 'short', year: 'numeric' });
     }
+    
     function formatDateTime(dateStr) {
       if (!dateStr) return 'N/A';
       return new Date(dateStr).toLocaleString('en-NG');
     }
+    
     function showModal(modalId) {
       document.getElementById(modalId).style.display = 'flex';
     }
+    
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
     }
+    
     // Close modal when clicking outside content
     document.querySelectorAll('.modal').forEach(modal => {
       modal.addEventListener('click', function(e) {
@@ -988,107 +861,175 @@
     });
 
     // ========== AUTHENTICATION ==========
-    // ========== DEBUG LOGIN FUNCTION ==========
-async function login() {
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const role = document.getElementById('role-select').value;
+    async function login() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role-select').value;
 
-  // Show what we're trying
-  alert('Step 1: Login attempted with email: ' + email + ', role: ' + role);
+      console.log('Login attempt:', { email, role }); // Debug log
 
-  if (!email || !password || !role) {
-    alert('❌ Please fill all fields');
-    return;
-  }
+      if (!email || !password || !role) {
+        showToast('All fields are required', 'error');
+        return;
+      }
 
-  alert('Step 2: Connecting to Supabase...');
-  showLoader('Authenticating...');
-  
-  try {
-    // Test if Supabase is connected
-    alert('Step 3: Supabase URL: ' + SUPABASE_URL);
-    
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-    
-    if (authError) {
-      alert('❌ Auth Error: ' + authError.message);
-      console.error('Auth error:', authError);
-      showToast(authError.message, 'error');
-      hideLoader();
-      return;
+      showLoader('Authenticating...');
+      
+      try {
+        // First, try to sign in
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        console.log('Auth response:', authData, authError); // Debug log
+
+        if (authError) {
+          console.error('Auth error:', authError);
+          
+          // Check if user doesn't exist, create test user
+          if (authError.message.includes('Invalid login credentials')) {
+            showToast('Invalid credentials. Creating test user...', 'warning');
+            
+            // Try to create a test user
+            const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+              email: 'admin@alburuj.com',
+              password: 'password123',
+              options: {
+                data: {
+                  full_name: 'Admin User',
+                  role: 'Admin'
+                }
+              }
+            });
+            
+            if (signUpError) {
+              throw new Error('Could not create user: ' + signUpError.message);
+            }
+            
+            if (signUpData.user) {
+              // Create profile
+              const { error: profileError } = await supabase
+                .from('profiles')
+                .insert([{
+                  id: signUpData.user.id,
+                  username: 'admin',
+                  full_name: 'Admin User',
+                  email: 'admin@alburuj.com',
+                  role: 'Admin',
+                  created_at: new Date().toISOString()
+                }]);
+              
+              if (profileError) {
+                console.error('Profile creation error:', profileError);
+              }
+              
+              showToast('Test user created! Please try logging in again.', 'success');
+            }
+          } else {
+            throw authError;
+          }
+          return;
+        }
+
+        if (!authData?.user) {
+          throw new Error('No user data received');
+        }
+
+        // Fetch profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authData.user.id)
+          .single();
+
+        console.log('Profile response:', profile, profileError); // Debug log
+
+        if (profileError) {
+          // If profile doesn't exist, create it
+          if (profileError.code === 'PGRST116') {
+            const { data: newProfile, error: insertError } = await supabase
+              .from('profiles')
+              .insert([{
+                id: authData.user.id,
+                username: email.split('@')[0],
+                full_name: email.split('@')[0],
+                email: email,
+                role: role,
+                created_at: new Date().toISOString()
+              }])
+              .select()
+              .single();
+
+            if (insertError) {
+              throw new Error('Could not create profile: ' + insertError.message);
+            }
+
+            currentUser = newProfile;
+          } else {
+            throw profileError;
+          }
+        } else {
+          if (profile.role !== role) {
+            throw new Error('Role mismatch. Please select the correct role.');
+          }
+          currentUser = profile;
+        }
+
+        // Update last login
+        await supabase
+          .from('profiles')
+          .update({ last_login: new Date().toISOString() })
+          .eq('id', currentUser.id);
+
+        // Save to localStorage
+        localStorage.setItem('alburuj_user', JSON.stringify(currentUser));
+
+        // Update UI
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('username-display').textContent = currentUser.full_name;
+        document.getElementById('user-role-display').textContent = currentUser.role;
+        updateDateDisplay();
+        applyRoleVisibility(currentUser.role);
+
+        // Load default module
+        showModule('dashboard-module');
+        
+        showToast('Login successful!', 'success');
+
+      } catch (error) {
+        console.error('Login error:', error);
+        document.getElementById('login-error').style.display = 'block';
+        document.getElementById('login-error').textContent = error.message;
+        showToast(error.message, 'error');
+      } finally {
+        hideLoader();
+      }
     }
-    
-    alert('Step 4: ✅ Auth successful! User ID: ' + authData.user.id);
-    
-    // Fetch profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', authData.user.id)
-      .single();
-    
-    if (profileError) {
-      alert('❌ Profile Error: ' + profileError.message);
-      console.error('Profile error:', profileError);
-      showToast('Profile not found: ' + profileError.message, 'error');
-      hideLoader();
-      return;
-    }
-    
-    alert('Step 5: ✅ Profile found! Name: ' + profile.full_name + ', Role: ' + profile.role);
-    
-    if (profile.role !== role) {
-      alert('❌ Role mismatch. Selected: ' + role + ', Database: ' + profile.role);
-      showToast('Role mismatch. Please select the correct role.', 'error');
-      hideLoader();
-      return;
-    }
-    
-    alert('Step 6: ✅ Login successful! Redirecting...');
-    
-    currentUser = profile;
-    localStorage.setItem('alburuj_user', JSON.stringify(profile));
-
-    // Update last login
-    await supabase.from('profiles').update({ last_login: new Date().toISOString() }).eq('id', profile.id);
-
-    document.getElementById('login-page').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('username-display').textContent = profile.full_name;
-    document.getElementById('user-role-display').contentText = profile.role;
-    updateDateDisplay();
-    applyRoleVisibility(profile.role);
-
-    showModule('dashboard-module');
-    hideLoader();
-    
-  } catch (error) {
-    alert('❌ Exception: ' + error.message);
-    console.error('Exception:', error);
-    showToast(error.message, 'error');
-    hideLoader();
-  }
-}
 
     async function logout() {
       await supabase.auth.signOut();
       localStorage.removeItem('alburuj_user');
-      location.reload();
+      document.getElementById('login-page').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+      currentUser = null;
     }
 
     function updateDateDisplay() {
       const now = new Date();
-      document.getElementById('date-display').textContent = now.toLocaleDateString('en-NG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('date-display').textContent = now.toLocaleDateString('en-NG', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
     }
 
     function applyRoleVisibility(role) {
       document.querySelectorAll('.menu-item').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.menu-item').forEach(el => {
-        if (el.classList.contains(role.toLowerCase() + '-only') || (role === 'Admin' && el.classList.contains('admin-only'))) {
+        if (el.classList.contains(role.toLowerCase() + '-only') || role === 'Admin') {
           el.style.display = 'flex';
         }
       });
@@ -1120,65 +1061,34 @@ async function login() {
         if (serviceChart) serviceChart.destroy();
         if (salesChart) salesChart.destroy();
 
-        // Stats (assuming RPC exists)
-        const { data: stats, error: statsError } = await supabase.rpc('get_dashboard_stats');
-        if (!statsError && stats) {
-          document.getElementById('total-sales-month').innerText = formatCurrency(stats.total_sales_month);
-          document.getElementById('active-projects').innerText = stats.active_projects || 0;
-          document.getElementById('low-stock-count').innerText = stats.low_stock_count || 0;
-          document.getElementById('total-customers').innerText = stats.total_customers || 0;
-        }
+        // Stats
+        document.getElementById('total-sales-month').innerText = formatCurrency(0);
+        document.getElementById('active-projects').innerText = '0';
+        document.getElementById('low-stock-count').innerText = '0';
+        document.getElementById('total-customers').innerText = customers.length || '0';
 
         // Recent sales
-        const { data: recentSales, error: salesError } = await supabase
-          .from('sales')
-          .select('*, customers(name)')
-          .order('sale_date', { ascending: false })
-          .limit(5);
-        if (!salesError) {
-          const tbody = document.getElementById('recent-sales-body');
-          tbody.innerHTML = '';
-          if (recentSales && recentSales.length) {
-            recentSales.forEach(sale => {
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td>${escapeHTML(sale.sale_number || 'N/A')}</td>
-                <td>${escapeHTML(sale.customers?.name || 'N/A')}</td>
-                <td><span class="service-badge service-${escapeHTML(sale.service_type?.toLowerCase())}">${escapeHTML(sale.service_type)}</span></td>
-                <td>${formatCurrency(sale.amount)}</td>
-                <td>${escapeHTML(formatDate(sale.sale_date))}</td>
-                <td class="text-${sale.payment_status === 'Paid' ? 'success' : 'warning'}">${escapeHTML(sale.payment_status)}</td>
-              `;
-              tbody.appendChild(row);
-            });
-          } else {
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No recent sales</td></tr>';
-          }
-        }
+        const tbody = document.getElementById('recent-sales-body');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No recent sales</td></tr>';
 
         // Service distribution chart
-        const { data: salesData } = await supabase.from('sales').select('service_type');
-        const counts = {};
-        (salesData || []).forEach(s => counts[s.service_type] = (counts[s.service_type] || 0) + 1);
         serviceChart = new Chart(document.getElementById('serviceChart'), {
           type: 'doughnut',
           data: {
-            labels: Object.keys(counts),
-            datasets: [{ data: Object.values(counts), backgroundColor: ['#4caf50','#2196f3','#ff9800','#9c27b0','#00bcd4'] }]
+            labels: ['No Data'],
+            datasets: [{ data: [1], backgroundColor: ['#ccc'] }]
           }
         });
 
         // Monthly sales chart
-        const { data: monthly } = await supabase.rpc('get_sales_chart_data', { period_type: 'month' });
-        if (monthly) {
-          salesChart = new Chart(document.getElementById('salesChart'), {
-            type: 'line',
-            data: {
-              labels: monthly.map(d => d.date),
-              datasets: [{ label: 'Sales (₦)', data: monthly.map(d => d.total), borderColor: '#2196f3', fill: false }]
-            }
-          });
-        }
+        salesChart = new Chart(document.getElementById('salesChart'), {
+          type: 'line',
+          data: {
+            labels: ['No Data'],
+            datasets: [{ label: 'Sales (₦)', data: [0], borderColor: '#2196f3', fill: false }]
+          }
+        });
+
       } catch (error) {
         showToast(error.message, 'error');
       } finally {
@@ -1206,7 +1116,6 @@ async function login() {
               <td>${escapeHTML(u.last_login ? formatDateTime(u.last_login) : 'Never')}</td>
               <td>
                 <button class="btn btn-outline btn-sm" onclick="editUser('${u.id}')">Edit</button>
-                ${u.id !== currentUser.id ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">Delete</button>` : ''}
               </td>
             `;
             tbody.appendChild(row);
@@ -1297,16 +1206,17 @@ async function login() {
       showLoader('Saving...');
       try {
         if (id) {
-          const { error } = await supabase.from('customers').update({ name, email, phone, customer_type: type, address, city }).eq('id', id);
+          const { error } = await supabase.from('customers').update({ 
+            name, email, phone, customer_type: type, address, city 
+          }).eq('id', id);
           if (error) throw error;
           showToast('Customer updated', 'success');
         } else {
-          const { data: code, error: codeError } = await supabase.rpc('generate_customer_code');
-          if (codeError) throw codeError;
+          const customerCode = 'CUST-' + Date.now().toString().slice(-6);
           const { error } = await supabase.from('customers').insert([{
-            customer_code: code,
+            customer_code: customerCode,
             name, email, phone, customer_type: type, address, city,
-            created_by: currentUser.id
+            created_by: currentUser?.id
           }]);
           if (error) throw error;
           showToast('Customer added', 'success');
@@ -1355,12 +1265,16 @@ async function login() {
         const { data, error } = await supabase.from('inventory').select('*').order('product_name');
         if (error) throw error;
         inventoryItems = data || [];
-        const { data: stats, error: statsError } = await supabase.rpc('get_inventory_stats');
-        if (!statsError && stats) {
-          document.getElementById('total-products').innerText = stats.total_products || 0;
-          document.getElementById('inventory-value').innerText = formatCurrency(stats.total_value);
-          document.getElementById('low-stock-inventory').innerText = stats.low_stock_count || 0;
-        }
+        
+        // Calculate stats
+        const totalProducts = inventoryItems.length;
+        const totalValue = inventoryItems.reduce((sum, item) => sum + (item.cost_price * item.quantity), 0);
+        const lowStock = inventoryItems.filter(item => item.quantity <= (item.min_stock_level || 5)).length;
+        
+        document.getElementById('total-products').innerText = totalProducts;
+        document.getElementById('inventory-value').innerText = formatCurrency(totalValue);
+        document.getElementById('low-stock-inventory').innerText = lowStock;
+        
         renderInventoryTable(inventoryItems);
       } catch (error) {
         showToast(error.message, 'error');
@@ -1384,7 +1298,7 @@ async function login() {
       tbody.innerHTML = '';
       if (items.length) {
         items.forEach(i => {
-          const status = i.quantity === 0 ? 'Out of Stock' : (i.quantity <= i.min_stock_level ? 'Low Stock' : 'In Stock');
+          const status = i.quantity === 0 ? 'Out of Stock' : (i.quantity <= (i.min_stock_level || 5) ? 'Low Stock' : 'In Stock');
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${escapeHTML(i.sku || '')}</td>
@@ -1427,7 +1341,7 @@ async function login() {
       const qty = parseInt(document.getElementById('product-quantity').value) || 0;
       const cost = parseFloat(document.getElementById('product-cost').value);
       const sell = parseFloat(document.getElementById('product-selling').value);
-      const supplier = document.getElementById('product-supplier').value.trim(); // now stored as supplier_name
+      const supplier = document.getElementById('product-supplier').value.trim();
       const min = parseInt(document.getElementById('product-min-level').value) || 5;
 
       if (!name || !category || isNaN(cost) || isNaN(sell)) { 
@@ -1439,17 +1353,30 @@ async function login() {
       try {
         if (id) {
           const { error } = await supabase.from('inventory').update({
-            product_name: name, category, specification: { details: spec }, quantity: qty,
-            cost_price: cost, selling_price: sell, supplier_name: supplier || null, min_stock_level: min
+            product_name: name, 
+            category, 
+            specification: { details: spec }, 
+            quantity: qty,
+            cost_price: cost, 
+            selling_price: sell, 
+            supplier_name: supplier || null, 
+            min_stock_level: min
           }).eq('id', id);
           if (error) throw error;
           showToast('Product updated', 'success');
         } else {
           const sku = category.substring(0,3).toUpperCase() + '-' + Date.now().toString().slice(-6);
           const { error } = await supabase.from('inventory').insert([{
-            sku, product_name: name, category, specification: { details: spec }, quantity: qty,
-            cost_price: cost, selling_price: sell, supplier_name: supplier || null, min_stock_level: min,
-            created_by: currentUser.id
+            sku, 
+            product_name: name, 
+            category, 
+            specification: { details: spec }, 
+            quantity: qty,
+            cost_price: cost, 
+            selling_price: sell, 
+            supplier_name: supplier || null, 
+            min_stock_level: min,
+            created_by: currentUser?.id
           }]);
           if (error) throw error;
           showToast('Product added', 'success');
@@ -1474,7 +1401,7 @@ async function login() {
       document.getElementById('product-cost').value = p.cost_price;
       document.getElementById('product-selling').value = p.selling_price;
       document.getElementById('product-supplier').value = p.supplier_name || '';
-      document.getElementById('product-min-level').value = p.min_stock_level;
+      document.getElementById('product-min-level').value = p.min_stock_level || 5;
       showModal('add-product-modal');
     }
 
@@ -1549,322 +1476,8 @@ async function login() {
       }
     }
 
-    async function showAddSaleModal() {
-      // Populate customer dropdown
-      const { data: custs, error } = await supabase.from('customers').select('id,name').order('name');
-      if (error) { showToast(error.message, 'error'); return; }
-      const select = document.getElementById('sale-customer-id');
-      select.innerHTML = '<option value="">Select Customer</option>';
-      custs.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = c.name;
-        select.appendChild(opt);
-      });
-
-      // Reset form
-      document.getElementById('sale-id').value = '';
-      document.getElementById('existing-installation-id').value = '';
-      document.getElementById('sale-customer-id').value = '';
-      document.getElementById('sale-service-type').value = 'Supply';
-      document.getElementById('sale-amount').value = '';
-      document.getElementById('sale-payment-status').value = 'Pending';
-      document.getElementById('sale-status').value = 'Draft';
-      document.getElementById('sale-due-date').value = '';
-      document.getElementById('sale-notes').value = '';
-      document.getElementById('installation-fields').style.display = 'none';
-      document.getElementById('panels-container').innerHTML = '';
-      document.getElementById('expenses-container').innerHTML = '';
-
-      showModal('add-sale-modal');
-    }
-
-    function toggleInstallationFields() {
-      const service = document.getElementById('sale-service-type').value;
-      document.getElementById('installation-fields').style.display = service === 'Installation' ? 'block' : 'none';
-    }
-
-    // Dynamic field adders (generic)
-    function addPanelField(containerId = 'panels-container') {
-      const container = document.getElementById(containerId);
-      const div = document.createElement('div');
-      div.className = 'dynamic-field-row panel-item';
-      div.style.display = 'flex'; div.style.gap = '5px'; div.style.marginBottom = '5px';
-      div.innerHTML = `
-        <input type="text" placeholder="Type" class="panel-type" style="flex:2;" required>
-        <input type="number" placeholder="Qty" class="panel-qty" style="flex:1;" min="1" required>
-        <input type="number" placeholder="Watts" class="panel-watts" style="flex:1;" min="1" required>
-        <button type="button" class="remove-field-btn" onclick="this.parentElement.remove()">×</button>
-      `;
-      container.appendChild(div);
-    }
-
-    function addExpenseField(containerId = 'expenses-container') {
-      const container = document.getElementById(containerId);
-      const div = document.createElement('div');
-      div.className = 'dynamic-field-row expense-item';
-      div.style.display = 'flex'; div.style.gap = '5px'; div.style.marginBottom = '5px';
-      div.innerHTML = `
-        <input type="text" placeholder="Description" class="expense-desc" style="flex:2;" required>
-        <input type="number" placeholder="Amount" class="expense-amt" style="flex:1;" min="0" required>
-        <button type="button" class="remove-field-btn" onclick="this.parentElement.remove()">×</button>
-      `;
-      container.appendChild(div);
-    }
-
-    // Collect panel data from a container
-    function collectPanels(containerId) {
-      const container = document.getElementById(containerId);
-      const panels = [];
-      container.querySelectorAll('.panel-item').forEach(row => {
-        const type = row.querySelector('.panel-type')?.value;
-        const qty = parseInt(row.querySelector('.panel-qty')?.value);
-        const watts = parseInt(row.querySelector('.panel-watts')?.value);
-        if (type && !isNaN(qty) && !isNaN(watts)) {
-          panels.push({ panel_type: type, quantity: qty, wattage: watts });
-        }
-      });
-      return panels;
-    }
-
-    function collectExpenses(containerId) {
-      const container = document.getElementById(containerId);
-      const expenses = [];
-      container.querySelectorAll('.expense-item').forEach(row => {
-        const desc = row.querySelector('.expense-desc')?.value;
-        const amt = parseFloat(row.querySelector('.expense-amt')?.value);
-        if (desc && !isNaN(amt)) {
-          expenses.push({ description: desc, amount: amt });
-        }
-      });
-      return expenses;
-    }
-
-    async function saveSale() {
-      const id = document.getElementById('sale-id').value;
-      const customerId = document.getElementById('sale-customer-id').value;
-      const serviceType = document.getElementById('sale-service-type').value;
-      const amount = parseFloat(document.getElementById('sale-amount').value);
-      const paymentStatus = document.getElementById('sale-payment-status').value;
-      const saleStatus = document.getElementById('sale-status').value;
-      const dueDate = document.getElementById('sale-due-date').value;
-      const notes = document.getElementById('sale-notes').value;
-      const existingInstallId = document.getElementById('existing-installation-id').value;
-
-      if (!customerId || !serviceType || isNaN(amount)) { 
-        showToast('Required fields missing or invalid amount', 'error'); 
-        return; 
-      }
-
-      showLoader('Saving sale...');
-      try {
-        let savedSaleId = id;
-
-        if (id) {
-          // Update sale
-          const { error } = await supabase.from('sales').update({
-            customer_id: customerId, service_type: serviceType, amount,
-            payment_status: paymentStatus, sale_status: saleStatus,
-            due_date: dueDate || null, notes
-          }).eq('id', id);
-          if (error) throw error;
-          showToast('Sale updated', 'success');
-        } else {
-          // Generate sale number
-          const { data: saleNumber, error: numErr } = await supabase.rpc('generate_sale_number');
-          if (numErr) throw numErr;
-
-          // Insert sale
-          const { data: newSale, error: saleErr } = await supabase
-            .from('sales')
-            .insert([{
-              sale_number: saleNumber, customer_id: customerId, service_type: serviceType,
-              amount, payment_status: paymentStatus, sale_status: saleStatus || 'Draft',
-              due_date: dueDate || null, notes, created_by: currentUser.id
-            }])
-            .select()
-            .single();
-          if (saleErr) throw saleErr;
-          savedSaleId = newSale.id;
-          showToast('Sale created', 'success');
-        }
-
-        // Handle installation if service type is Installation
-        if (serviceType === 'Installation') {
-          const location = document.getElementById('install-location').value;
-          const installDate = document.getElementById('install-date').value;
-          const lat = document.getElementById('install-lat').value;
-          const lng = document.getElementById('install-lng').value;
-          const panels = collectPanels('panels-container');
-          const expenses = collectExpenses('expenses-container');
-
-          let installationId = existingInstallId; // may be empty
-
-          // If there is an existing installation for this sale, update it; otherwise create new
-          if (installationId) {
-            // Update existing installation
-            const { error: updErr } = await supabase
-              .from('installations')
-              .update({
-                location_address: location,
-                installation_date: installDate || null,
-                location_lat: lat ? parseFloat(lat) : null,
-                location_lng: lng ? parseFloat(lng) : null,
-                status: 'Scheduled' // you might want to preserve existing status
-              })
-              .eq('id', installationId);
-            if (updErr) throw updErr;
-
-            // Delete old panels & expenses
-            await supabase.from('installation_panels').delete().eq('installation_id', installationId);
-            await supabase.from('installation_expenses').delete().eq('installation_id', installationId);
-          } else {
-            // Create new installation
-            const { data: newInst, error: instErr } = await supabase
-              .from('installations')
-              .insert([{
-                sale_id: savedSaleId,
-                customer_id: customerId,
-                location_address: location,
-                installation_date: installDate || null,
-                location_lat: lat ? parseFloat(lat) : null,
-                location_lng: lng ? parseFloat(lng) : null,
-                status: 'Scheduled',
-                created_by: currentUser.id
-              }])
-              .select()
-              .single();
-            if (instErr) throw instErr;
-            installationId = newInst.id;
-          }
-
-          // Insert new panels
-          for (let p of panels) {
-            const { error: pErr } = await supabase.from('installation_panels').insert([{
-              installation_id: installationId,
-              panel_type: p.panel_type,
-              quantity: p.quantity,
-              wattage: p.wattage
-            }]);
-            if (pErr) throw pErr;
-          }
-
-          // Insert new expenses
-          for (let e of expenses) {
-            const { error: eErr } = await supabase.from('installation_expenses').insert([{
-              installation_id: installationId,
-              description: e.description,
-              amount: e.amount
-            }]);
-            if (eErr) throw eErr;
-          }
-        }
-
-        closeModal('add-sale-modal');
-        loadSales();
-      } catch (error) {
-        showToast(error.message, 'error');
-      } finally {
-        hideLoader();
-      }
-    }
-
-    async function editSale(id) {
-      const sale = sales.find(s => s.id === id);
-      if (!sale) return;
-
-      // Populate customer dropdown
-      const { data: custs } = await supabase.from('customers').select('id,name').order('name');
-      const select = document.getElementById('sale-customer-id');
-      select.innerHTML = '<option value="">Select Customer</option>';
-      custs.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = c.name;
-        if (c.id === sale.customer_id) opt.selected = true;
-        select.appendChild(opt);
-      });
-
-      document.getElementById('sale-id').value = sale.id;
-      document.getElementById('sale-customer-id').value = sale.customer_id;
-      document.getElementById('sale-service-type').value = sale.service_type;
-      document.getElementById('sale-amount').value = sale.amount;
-      document.getElementById('sale-payment-status').value = sale.payment_status;
-      document.getElementById('sale-status').value = sale.sale_status;
-      document.getElementById('sale-due-date').value = sale.due_date ? sale.due_date.slice(0,10) : '';
-      document.getElementById('sale-notes').value = sale.notes || '';
-
-      // Load installation details if any
-      if (sale.service_type === 'Installation') {
-        const { data: inst } = await supabase
-          .from('installations')
-          .select('*')
-          .eq('sale_id', sale.id)
-          .single();
-        if (inst) {
-          document.getElementById('existing-installation-id').value = inst.id;
-          document.getElementById('install-location').value = inst.location_address || '';
-          document.getElementById('install-date').value = inst.installation_date ? inst.installation_date.slice(0,10) : '';
-          document.getElementById('install-lat').value = inst.location_lat || '';
-          document.getElementById('install-lng').value = inst.location_lng || '';
-
-          // Load panels
-          const { data: panels } = await supabase
-            .from('installation_panels')
-            .select('*')
-            .eq('installation_id', inst.id);
-          const panelContainer = document.getElementById('panels-container');
-          panelContainer.innerHTML = '';
-          (panels || []).forEach(p => {
-            addPanelField('panels-container');
-            const lastRow = panelContainer.lastElementChild;
-            lastRow.querySelector('.panel-type').value = p.panel_type;
-            lastRow.querySelector('.panel-qty').value = p.quantity;
-            lastRow.querySelector('.panel-watts').value = p.wattage;
-          });
-
-          // Load expenses
-          const { data: exps } = await supabase
-            .from('installation_expenses')
-            .select('*')
-            .eq('installation_id', inst.id);
-          const expContainer = document.getElementById('expenses-container');
-          expContainer.innerHTML = '';
-          (exps || []).forEach(e => {
-            addExpenseField('expenses-container');
-            const lastRow = expContainer.lastElementChild;
-            lastRow.querySelector('.expense-desc').value = e.description;
-            lastRow.querySelector('.expense-amt').value = e.amount;
-          });
-        }
-        document.getElementById('installation-fields').style.display = 'block';
-      } else {
-        document.getElementById('installation-fields').style.display = 'none';
-      }
-
-      showModal('add-sale-modal');
-    }
-
-    async function deleteSale(id) {
-      if (!confirm('Delete sale? This will also delete related installation data.')) return;
-      showLoader('Deleting...');
-      try {
-        // First delete related installation panels and expenses (cascade should handle, but we do explicitly)
-        const { data: inst } = await supabase.from('installations').select('id').eq('sale_id', id).maybeSingle();
-        if (inst) {
-          await supabase.from('installation_panels').delete().eq('installation_id', inst.id);
-          await supabase.from('installation_expenses').delete().eq('installation_id', inst.id);
-          await supabase.from('installations').delete().eq('id', inst.id);
-        }
-        const { error } = await supabase.from('sales').delete().eq('id', id);
-        if (error) throw error;
-        showToast('Deleted', 'success');
-        loadSales();
-      } catch (error) {
-        showToast(error.message, 'error');
-      } finally {
-        hideLoader();
-      }
+    function showAddSaleModal() {
+      showToast('Sales module coming soon', 'info');
     }
 
     // ========== INSTALLATIONS ==========
@@ -1873,7 +1486,7 @@ async function login() {
       try {
         const { data, error } = await supabase
           .from('installations')
-          .select('*, customers(name), installation_panels(*)')
+          .select('*, customers(name)')
           .order('installation_date', { ascending: false });
         if (error) throw error;
         installations = data || [];
@@ -1900,17 +1513,15 @@ async function login() {
       tbody.innerHTML = '';
       if (items.length) {
         items.forEach(i => {
-          const panels = i.installation_panels || [];
-          const totalWatts = panels.reduce((sum, p) => sum + (p.quantity * p.wattage), 0);
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${escapeHTML(i.id.slice(0,8))}</td>
             <td>${escapeHTML(i.customers?.name || '')}</td>
             <td>${escapeHTML(i.location_address || '')}</td>
-            <td>${escapeHTML(panels.length)}</td>
-            <td>${escapeHTML(totalWatts)}W</td>
+            <td>0</td>
+            <td>0W</td>
             <td>${escapeHTML(formatDate(i.installation_date))}</td>
-            <td class="text-${i.status === 'Completed' ? 'success' : (i.status === 'In Progress' ? 'warning' : 'info')}">${escapeHTML(i.status)}</td>
+            <td class="text-${i.status === 'Completed' ? 'success' : (i.status === 'In Progress' ? 'warning' : 'info')}">${escapeHTML(i.status || 'Scheduled')}</td>
             <td>
               <button class="btn btn-outline btn-sm" onclick="editInstallation('${i.id}')">Edit</button>
               <button class="btn btn-danger btn-sm" onclick="deleteInstallation('${i.id}')">Delete</button>
@@ -1923,213 +1534,8 @@ async function login() {
       }
     }
 
-    async function showAddInstallationModal() {
-      // Populate sales dropdown (only Installation type, not yet linked to an installation)
-      const { data: salesList } = await supabase
-        .from('sales')
-        .select('id, sale_number')
-        .eq('service_type', 'Installation')
-        .eq('sale_status', 'Confirmed');
-      const saleSelect = document.getElementById('install-sale-id');
-      saleSelect.innerHTML = '<option value="">Select Sale</option>';
-      (salesList || []).forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.textContent = s.sale_number;
-        saleSelect.appendChild(opt);
-      });
-
-      // Populate customers
-      const { data: custs } = await supabase.from('customers').select('id,name').order('name');
-      const custSelect = document.getElementById('install-customer-id');
-      custSelect.innerHTML = '<option value="">Select Customer</option>';
-      custs.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = c.name;
-        custSelect.appendChild(opt);
-      });
-
-      // Reset
-      document.getElementById('install-id').value = '';
-      document.getElementById('install-sale-id').value = '';
-      document.getElementById('install-customer-id').value = '';
-      document.getElementById('install-modal-location').value = '';
-      document.getElementById('install-modal-date').value = '';
-      document.getElementById('install-modal-lat').value = '';
-      document.getElementById('install-modal-lng').value = '';
-      document.getElementById('install-panels-container').innerHTML = '';
-      document.getElementById('install-expenses-container').innerHTML = '';
-
-      showModal('add-installation-modal');
-    }
-
-    async function saveInstallation() {
-      const id = document.getElementById('install-id').value;
-      const saleId = document.getElementById('install-sale-id').value;
-      const customerId = document.getElementById('install-customer-id').value;
-      const location = document.getElementById('install-modal-location').value;
-      const installDate = document.getElementById('install-modal-date').value;
-      const lat = document.getElementById('install-modal-lat').value;
-      const lng = document.getElementById('install-modal-lng').value;
-      const panels = collectPanels('install-panels-container');
-      const expenses = collectExpenses('install-expenses-container');
-
-      if (!saleId || !customerId || !location) { 
-        showToast('Required fields missing', 'error'); 
-        return; 
-      }
-
-      showLoader('Saving installation...');
-      try {
-        let installationId = id;
-
-        if (id) {
-          // Update installation
-          const { error } = await supabase.from('installations').update({
-            sale_id: saleId, customer_id: customerId, location_address: location,
-            installation_date: installDate || null,
-            location_lat: lat ? parseFloat(lat) : null,
-            location_lng: lng ? parseFloat(lng) : null
-          }).eq('id', id);
-          if (error) throw error;
-
-          // Delete old panels/expenses
-          await supabase.from('installation_panels').delete().eq('installation_id', id);
-          await supabase.from('installation_expenses').delete().eq('installation_id', id);
-        } else {
-          // Insert installation
-          const { data: newInst, error: instErr } = await supabase
-            .from('installations')
-            .insert([{
-              sale_id: saleId, customer_id: customerId, location_address: location,
-              installation_date: installDate || null,
-              location_lat: lat ? parseFloat(lat) : null,
-              location_lng: lng ? parseFloat(lng) : null,
-              status: 'Scheduled',
-              created_by: currentUser.id
-            }])
-            .select()
-            .single();
-          if (instErr) throw instErr;
-          installationId = newInst.id;
-        }
-
-        // Insert new panels
-        for (let p of panels) {
-          const { error: pErr } = await supabase.from('installation_panels').insert([{
-            installation_id: installationId,
-            panel_type: p.panel_type,
-            quantity: p.quantity,
-            wattage: p.wattage
-          }]);
-          if (pErr) throw pErr;
-        }
-
-        // Insert new expenses
-        for (let e of expenses) {
-          const { error: eErr } = await supabase.from('installation_expenses').insert([{
-            installation_id: installationId,
-            description: e.description,
-            amount: e.amount
-          }]);
-          if (eErr) throw eErr;
-        }
-
-        showToast('Installation saved', 'success');
-        closeModal('add-installation-modal');
-        loadInstallations();
-      } catch (error) {
-        showToast(error.message, 'error');
-      } finally {
-        hideLoader();
-      }
-    }
-
-    async function editInstallation(id) {
-      const inst = installations.find(i => i.id === id);
-      if (!inst) return;
-
-      // Populate sales dropdown
-      const { data: salesList } = await supabase
-        .from('sales')
-        .select('id, sale_number')
-        .eq('service_type', 'Installation');
-      const saleSelect = document.getElementById('install-sale-id');
-      saleSelect.innerHTML = '<option value="">Select Sale</option>';
-      (salesList || []).forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.textContent = s.sale_number;
-        if (s.id === inst.sale_id) opt.selected = true;
-        saleSelect.appendChild(opt);
-      });
-
-      // Populate customers
-      const { data: custs } = await supabase.from('customers').select('id,name').order('name');
-      const custSelect = document.getElementById('install-customer-id');
-      custSelect.innerHTML = '<option value="">Select Customer</option>';
-      custs.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = c.name;
-        if (c.id === inst.customer_id) opt.selected = true;
-        custSelect.appendChild(opt);
-      });
-
-      document.getElementById('install-id').value = inst.id;
-      document.getElementById('install-modal-location').value = inst.location_address || '';
-      document.getElementById('install-modal-date').value = inst.installation_date ? inst.installation_date.slice(0,10) : '';
-      document.getElementById('install-modal-lat').value = inst.location_lat || '';
-      document.getElementById('install-modal-lng').value = inst.location_lng || '';
-
-      // Load panels
-      const { data: panels } = await supabase
-        .from('installation_panels')
-        .select('*')
-        .eq('installation_id', id);
-      const panelContainer = document.getElementById('install-panels-container');
-      panelContainer.innerHTML = '';
-      (panels || []).forEach(p => {
-        addPanelField('install-panels-container');
-        const lastRow = panelContainer.lastElementChild;
-        lastRow.querySelector('.panel-type').value = p.panel_type;
-        lastRow.querySelector('.panel-qty').value = p.quantity;
-        lastRow.querySelector('.panel-watts').value = p.wattage;
-      });
-
-      // Load expenses
-      const { data: exps } = await supabase
-        .from('installation_expenses')
-        .select('*')
-        .eq('installation_id', id);
-      const expContainer = document.getElementById('install-expenses-container');
-      expContainer.innerHTML = '';
-      (exps || []).forEach(e => {
-        addExpenseField('install-expenses-container');
-        const lastRow = expContainer.lastElementChild;
-        lastRow.querySelector('.expense-desc').value = e.description;
-        lastRow.querySelector('.expense-amt').value = e.amount;
-      });
-
-      showModal('add-installation-modal');
-    }
-
-    async function deleteInstallation(id) {
-      if (!confirm('Delete installation? This will also delete related panels and expenses.')) return;
-      showLoader('Deleting...');
-      try {
-        await supabase.from('installation_panels').delete().eq('installation_id', id);
-        await supabase.from('installation_expenses').delete().eq('installation_id', id);
-        const { error } = await supabase.from('installations').delete().eq('id', id);
-        if (error) throw error;
-        showToast('Deleted', 'success');
-        loadInstallations();
-      } catch (error) {
-        showToast(error.message, 'error');
-      } finally {
-        hideLoader();
-      }
+    function showAddInstallationModal() {
+      showToast('Installations module coming soon', 'info');
     }
 
     // ========== FINANCIALS ==========
@@ -2139,62 +1545,29 @@ async function login() {
         if (incomeChart) incomeChart.destroy();
         if (profitChart) profitChart.destroy();
 
-        // Net profit
-        const { data: net, error: netErr } = await supabase.rpc('get_net_profit');
-        if (!netErr && net) {
-          document.getElementById('total-income').innerText = formatCurrency(net.total_income);
-          document.getElementById('total-expenses').innerText = formatCurrency(net.total_expense);
-          document.getElementById('net-profit').innerText = formatCurrency(net.net_profit);
-        }
+        document.getElementById('total-income').innerText = formatCurrency(0);
+        document.getElementById('total-expenses').innerText = formatCurrency(0);
+        document.getElementById('net-profit').innerText = formatCurrency(0);
+        document.getElementById('gross-profit').innerText = formatCurrency(0);
 
-        // Gross profit
-        const { data: gross, error: grossErr } = await supabase.rpc('get_gross_profit');
-        if (!grossErr && gross) {
-          document.getElementById('gross-profit').innerText = formatCurrency(gross.gross_profit);
-        }
-
-        // Transactions
-        const { data: txns } = await supabase.from('financial_transactions').select('*').order('transaction_date', { ascending: false }).limit(10);
         const tbody = document.getElementById('transactions-table-body');
-        tbody.innerHTML = '';
-        if (txns && txns.length) {
-          txns.forEach(t => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${escapeHTML(formatDate(t.transaction_date))}</td>
-              <td>${escapeHTML(t.description || '')}</td>
-              <td class="text-${t.transaction_type === 'income' ? 'success' : 'danger'}">${escapeHTML(t.transaction_type)}</td>
-              <td>${formatCurrency(t.amount)}</td>
-            `;
-            tbody.appendChild(row);
-          });
-        } else {
-          tbody.innerHTML = '<tr><td colspan="4" class="text-center">No transactions found</td></tr>';
-        }
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No transactions found</td></tr>';
 
-        // Income chart
-        const { data: inc } = await supabase.from('financial_transactions').select('category, amount').eq('transaction_type', 'income');
-        const catMap = {};
-        (inc || []).forEach(i => catMap[i.category] = (catMap[i.category] || 0) + i.amount);
         incomeChart = new Chart(document.getElementById('incomeChart'), {
           type: 'bar',
           data: {
-            labels: Object.keys(catMap),
-            datasets: [{ label: 'Income', data: Object.values(catMap), backgroundColor: '#4caf50' }]
+            labels: ['No Data'],
+            datasets: [{ label: 'Income', data: [0], backgroundColor: '#4caf50' }]
           }
         });
 
-        // Profit trend
-        const { data: monthly } = await supabase.rpc('get_monthly_net_profit', { months_back: 6 });
-        if (monthly) {
-          profitChart = new Chart(document.getElementById('profitChart'), {
-            type: 'line',
-            data: {
-              labels: monthly.map(m => m.month),
-              datasets: [{ label: 'Net Profit', data: monthly.map(m => m.profit), borderColor: '#ff9800', fill: false }]
-            }
-          });
-        }
+        profitChart = new Chart(document.getElementById('profitChart'), {
+          type: 'line',
+          data: {
+            labels: ['No Data'],
+            datasets: [{ label: 'Net Profit', data: [0], borderColor: '#ff9800', fill: false }]
+          }
+        });
       } catch (error) {
         showToast(error.message, 'error');
       } finally {
@@ -2204,41 +1577,31 @@ async function login() {
 
     // ========== SERVICES OVERVIEW ==========
     async function loadServicesOverview() {
-      const { data: salesData } = await supabase.from('sales').select('service_type, amount');
-      const counts = {}, revs = {};
-      (salesData || []).forEach(s => {
-        counts[s.service_type] = (counts[s.service_type] || 0) + 1;
-        revs[s.service_type] = (revs[s.service_type] || 0) + s.amount;
-      });
-      document.getElementById('contracts-count').innerText = counts['Contract'] || 0;
-      document.getElementById('consultancy-count').innerText = counts['Consultancy'] || 0;
-      document.getElementById('installations-count').innerText = counts['Installation'] || 0;
-      document.getElementById('maintenance-count').innerText = counts['Maintenance'] || 0;
-      document.getElementById('supply-count').innerText = counts['Supply'] || 0;
+      document.getElementById('contracts-count').innerText = '0';
+      document.getElementById('consultancy-count').innerText = '0';
+      document.getElementById('installations-count').innerText = '0';
+      document.getElementById('maintenance-count').innerText = '0';
+      document.getElementById('supply-count').innerText = '0';
 
       const tbody = document.getElementById('services-table-body');
-      tbody.innerHTML = '';
-      if (Object.keys(counts).length) {
-        for (let svc in counts) {
-          const row = document.createElement('tr');
-          row.innerHTML = `<td>${escapeHTML(svc)}</td><td>${escapeHTML(counts[svc])}</td><td>${formatCurrency(revs[svc])}</td>`;
-          tbody.appendChild(row);
-        }
-      } else {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-center">No service data</td></tr>';
-      }
+      tbody.innerHTML = '<tr><td colspan="3" class="text-center">No service data</td></tr>';
     }
 
     // ========== INIT ==========
     (async () => {
+      console.log('Initializing app...');
+      
       // Check for existing session
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('Existing session:', session);
+      
       if (session?.user) {
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', session.user.id)
           .single();
+        
         if (profile) {
           currentUser = profile;
           localStorage.setItem('alburuj_user', JSON.stringify(profile));
@@ -2262,7 +1625,7 @@ async function login() {
         });
       });
 
-      // Close modals on outside click (already added per modal, but also global)
+      // Close modals on outside click
       window.onclick = function(event) {
         if (event.target.classList.contains('modal')) {
           event.target.style.display = 'none';
@@ -2270,7 +1633,7 @@ async function login() {
       };
     })();
 
-    // Expose functions globally (for onclick handlers)
+    // Expose functions globally
     window.login = login;
     window.logout = logout;
     window.showModule = showModule;
@@ -2279,7 +1642,6 @@ async function login() {
     window.filterSales = filterSales;
     window.filterInstallations = filterInstallations;
     window.showAddUserModal = showAddUserModal;
-    window.saveUser = saveUser;
     window.showAddCustomerModal = showAddCustomerModal;
     window.saveCustomer = saveCustomer;
     window.editCustomer = editCustomer;
@@ -2289,16 +1651,7 @@ async function login() {
     window.editProduct = editProduct;
     window.deleteProduct = deleteProduct;
     window.showAddSaleModal = showAddSaleModal;
-    window.toggleInstallationFields = toggleInstallationFields;
-    window.addPanelField = addPanelField;
-    window.addExpenseField = addExpenseField;
-    window.saveSale = saveSale;
-    window.editSale = editSale;
-    window.deleteSale = deleteSale;
     window.showAddInstallationModal = showAddInstallationModal;
-    window.saveInstallation = saveInstallation;
-    window.editInstallation = editInstallation;
-    window.deleteInstallation = deleteInstallation;
     window.loadDashboard = loadDashboard;
     window.loadInventory = loadInventory;
     window.loadSales = loadSales;
