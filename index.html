@@ -2565,9 +2565,33 @@ function renderProductSalesTable(items) {
 }
 
 async function showAddProductSaleModal() {
-  const { data: custs, error } = await supabaseClient.from('customers').select('id,name').order('name');
-  if (error) { showToast(error.message, 'error'); return; }
+  // LOAD INVENTORY FIRST - THIS IS THE FIX
+  console.log('Loading inventory for product sale...');
+  const { data: invData, error: invError } = await supabaseClient
+    .from('inventory')
+    .select('*');
   
+  if (invError) {
+    console.error('Error loading inventory:', invError);
+    showToast('Failed to load inventory', 'error');
+    return;
+  }
+  
+  inventoryItems = invData || [];
+  console.log('Loaded', inventoryItems.length, 'products');
+
+  // LOAD CUSTOMERS
+  const { data: custs, error } = await supabaseClient
+    .from('customers')
+    .select('id,name')
+    .order('name');
+    
+  if (error) { 
+    showToast(error.message, 'error'); 
+    return; 
+  }
+  
+  // FILL CUSTOMER DROPDOWN
   const select = document.getElementById('product-sale-customer-id');
   select.innerHTML = '<option value="">Select Customer</option>';
   custs.forEach(c => {
@@ -2577,6 +2601,7 @@ async function showAddProductSaleModal() {
     select.appendChild(opt);
   });
 
+  // CLEAR FORM
   document.getElementById('product-sale-id').value = '';
   document.getElementById('product-sale-customer-id').value = '';
   document.getElementById('product-sale-date').value = new Date().toISOString().slice(0,10);
@@ -2586,10 +2611,12 @@ async function showAddProductSaleModal() {
   document.getElementById('product-sale-items-container').innerHTML = '';
   document.getElementById('product-sale-total').textContent = formatCurrency(0);
 
+  // ADD FIRST PRODUCT ROW
   addProductSaleItem();
   
+  // SHOW MODAL
   showModal('add-product-sale-modal');
-}
+  }
 
 function addProductSaleItem() {
   const container = document.getElementById('product-sale-items-container');
